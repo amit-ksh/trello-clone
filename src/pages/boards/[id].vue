@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import type { Board, Task } from "@/types";
 import { computed, toRefs } from "vue";
 import BoardDragAndDrop from "../../components/BoardDragAndDrop.vue";
 import { useAlerts } from "@/stores/alerts";
-import { v4 as uuidv4 } from "uuid";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
 import AppLoader from "../../components/AppLoader.vue";
@@ -11,7 +11,7 @@ import getBoardQuery from "@/graphql/queries/board.query.gql";
 import boardsQuery from "@/graphql/queries/board.query.gql";
 import deleteBoardMutation from "@/graphql/mutations/deleteBoard.mutation.gql";
 import updateBoardMutation from "@/graphql/mutations/updateBoard.mutation.gql";
-import type { Board, Task } from "@/types";
+import addTaskToBoardMutation from "@/graphql/mutations/addTaskToBoard.mutation.gql";
 
 const alerts = useAlerts();
 const router = useRouter();
@@ -25,7 +25,11 @@ const {
   result: boardData,
   loading: loadingBoard,
   onError: onBoardError,
-} = useQuery(getBoardQuery, { id: boardId.value });
+} = useQuery(
+  getBoardQuery,
+  { id: boardId.value },
+  { fetchPolicy: "cache-and-network" }
+);
 onBoardError(() => alerts.error("Error loading board!"));
 const board = computed(() => boardData.value?.board || null);
 const tasks = computed(() => board.value?.tasks?.items);
@@ -58,14 +62,32 @@ async function deleteBoardIfConfirmed() {
   }
 }
 
+// handle create new task
+const {
+  mutate: addTaskToBoard,
+  onError: onErrorCreatingTask,
+  onDone: onDoneCreatingTask,
+} = useMutation(addTaskToBoardMutation);
+onErrorCreatingTask((error) => {
+  taskReject(error);
+  console.error(error);
+  alerts.error("Error creating task");
+});
+onDoneCreatingTask((res) => {
+  taskResolve(res.data.boardUpdate.tasks.items[0]);
+  alerts.success("New task created!");
+});
+
+// eslint-disable-next-line
+let taskResolve = (task: Task) => {};
+// eslint-disable-next-line
+let taskReject = (message: Error) => {};
+
 async function addTask(task: Task): Promise<Task> {
-  return new Promise((resolve) => {
-    const taskWithId = {
-      ...task,
-      id: uuidv4(),
-    };
-    // persist the change
-    resolve(taskWithId);
+  return new Promise((resolve, reject) => {
+    taskResolve = resolve;
+    taskReject = reject;
+    addTaskToBoard({ ...task, boardId: boardId.value });
   });
 }
 </script>
