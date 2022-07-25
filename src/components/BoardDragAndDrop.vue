@@ -5,10 +5,14 @@ import draggable from "vuedraggable";
 import { v4 as uuidv4 } from "uuid";
 import type { Board, Column, Task } from "@/types";
 import TaskCard from "./TaskCard.vue";
+import { useAlerts } from "@/stores/alerts";
+
+const alerts = useAlerts();
 
 const props = defineProps<{
   board: Board;
   tasks: Task[];
+  addTask(task: Partial<Task>): Task;
 }>();
 const emit = defineEmits<{ (e: "update", payload: Partial<Board>): void }>();
 
@@ -18,6 +22,17 @@ const columns = reactive<Column[]>(JSON.parse(board.order as string));
 
 function addColumn() {
   columns.push({ id: uuidv4(), title: "New column", taskIds: [] });
+}
+
+async function addTask({ column, title }: { column: Column; title: string }) {
+  const newTask = { title };
+  try {
+    const savedTask = await props.addTask(newTask);
+    tasks.push({ ...savedTask });
+    column.taskIds.push(savedTask.id);
+  } catch (error) {
+    alerts.error("Error creating task!");
+  }
 }
 
 watch(columns, () =>
@@ -43,27 +58,39 @@ watch(columns, () =>
         <div
           class="column bg-gray-100 flex flex-col justify-between rounded-lg px-3 py-3 mr-4 w-[300px]"
         >
-          <h3>{{ column.title }}</h3>
+          <div>
+            <h3>{{ column.title }}</h3>
 
-          <draggable
-            :list="column.taskIds"
-            group="tasks"
-            item-key="uid"
-            :animation="200"
-            ghost-class="ghost-card"
-            class="min-h-[400px]"
-          >
-            <template #item="{ element: taskId }">
-              <TaskCard
-                v-if="tasks.find((t: Task) => t.id === taskId)"
-                :task="((tasks.find((t: Task) => t.id === taskId)) as Task)"
-                class="mt-3 cursor-move"
-              />
-            </template>
-          </draggable>
+            <draggable
+              :list="column.taskIds"
+              group="tasks"
+              item-key="uid"
+              :animation="200"
+              ghost-class="ghost-card"
+              class="min-h-[400px]"
+            >
+              <template #item="{ element: taskId }">
+                <TaskCard
+                  v-if="tasks.find((t: Task) => t.id === taskId)"
+                  :task="((tasks.find((t: Task) => t.id === taskId)) as Task)"
+                  class="mt-3 cursor-move"
+                />
+              </template>
+            </draggable>
+
+            <TaskCreator
+              @create="
+                addTask({
+                  column,
+                  title: $event,
+                })
+              "
+            />
+          </div>
         </div>
       </template>
     </draggable>
+
     <button class="text-gray-500" @click="addColumn">New Column +</button>
   </div>
 </template>

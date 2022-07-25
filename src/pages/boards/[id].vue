@@ -2,6 +2,7 @@
 import { ref, toRefs } from "vue";
 import BoardDragAndDrop from "../../components/BoardDragAndDrop.vue";
 import { useAlerts } from "@/stores/alerts";
+import { v4 as uuidv4 } from "uuid";
 
 const alerts = useAlerts();
 
@@ -26,17 +27,36 @@ const updateBoard = (b) => {
   board.value = b;
   alerts.success("Board updated!");
 };
+
+async function addTask(task) {
+  return new Promise((resolve, reject) => {
+    const taskWithTheId = {
+      ...task,
+      id: uuidv4(),
+    };
+    tasks.value.push(taskWithTheId);
+    resolve(taskWithTheId);
+  });
+}
+const deleteBoardIfConfirmed = () => {
+  console.log("delete board");
+};
 </script>
 
 <template>
   <div>
-    <BoardDragAndDrop :tasks="tasks" :board="board" @update="updateBoard" />
+    <AppPageHeading>
+      {{ board.title }}
+    </AppPageHeading>
 
-    <details>
-      <pre>
-        {{ board }}
-      </pre>
-    </details>
+    <BoardMenu :board="board" @deleteBoard="deleteBoardIfConfirmed" />
+
+    <BoardDragAndDrop
+      :tasks="tasks"
+      :board="board"
+      :add-task="addTask"
+      @update="updateBoard"
+    />
   </div>
 </template>
 
