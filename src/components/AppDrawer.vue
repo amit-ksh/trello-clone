@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import router from "@/router";
 import { Drawer, DrawerContent } from "@progress/kendo-vue-layout";
-// import { useRouter } from "vue-router";
+import { useLocalStorage } from "@vueuse/core";
 import { computed, ref } from "vue";
-// const router = useRouter();
+
 const selectedId = ref(0);
-const expanded = ref(false);
+const expanded = useLocalStorage("trello-clone-drawer-expanded", true);
 const expandedIcon = computed(() =>
   expanded.value ? "k-i-arrow-chevron-left" : "k-i-arrow-chevron-right"
 );
