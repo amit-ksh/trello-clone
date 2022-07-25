@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import AppLoader from "../../components/AppLoader.vue";
 import { useAlerts } from "@/stores/alerts";
+
 import boardsQuery from "@/graphql/queries/boards.query.gql";
 import createBoardMutation from "@/graphql/mutations/createBoard.mutation.gql";
 import { useMutation, useQuery } from "@vue/apollo-composable";
@@ -63,5 +65,6 @@ const getCoolGradient = (index: number) => {
       <span>New Board +</span>
     </button>
   </div>
-  <p v-if="loading">Loading...</p>
+
+  <AppLoader v-if="loading" :overlay="true" />
 </template>
