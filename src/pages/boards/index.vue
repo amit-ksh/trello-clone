@@ -9,22 +9,31 @@ import { computed } from "vue";
 
 const alerts = useAlerts();
 
-const { result, loading, onError } = useQuery(boardsQuery);
+const { result, loading, onError } = useQuery(boardsQuery, null, {
+  fetchPolicy: "cache-and-network",
+});
 const boards = computed(() => result.value?.boardsList?.items || []);
 
 onError(() => alerts.error("Error loading boards"));
-const { mutate: createBoard } = useMutation(createBoardMutation, () => ({
-  update(cache, { data: { boardCreate } }) {
-    cache.updateQuery({ query: boardsQuery }, (res) => ({
-      boardsList: {
-        items: [...res.boardsList.items, boardCreate],
-      },
-    }));
-  },
-}));
+const { mutate: createBoard, onDone: onBoardCreated } = useMutation(
+  createBoardMutation,
+  () => ({
+    update(cache, { data: { boardCreate } }) {
+      cache.updateQuery({ query: boardsQuery }, (res) => ({
+        boardsList: {
+          items: [...res.boardsList.items, boardCreate],
+        },
+      }));
+    },
+  })
+);
+
+onBoardCreated(() => {
+  alerts.success("Board created!");
+});
 const newBoardPayload = {
   data: {
-    title: "Test board 2",
+    title: "New Board",
   },
 };
 
