@@ -5,6 +5,7 @@ import "@vue/runtime-core";
 
 declare module "@vue/runtime-core" {
   export interface GlobalComponents {
+    AppAlerts: typeof import("./src/components/AppAlerts.vue")["default"];
     AppButton: typeof import("./src/components/AppButton.vue")["default"];
     AppDrawer: typeof import("./src/components/AppDrawer.vue")["default"];
     AppImage: typeof import("./src/components/AppImage.vue")["default"];
