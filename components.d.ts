@@ -6,7 +6,7 @@ import "@vue/runtime-core";
 declare module "@vue/runtime-core" {
   export interface GlobalComponents {
     AppAlerts: typeof import("./src/components/AppAlerts.vue")["default"];
-    AppButton: typeof import("./src/components/AppButton.vue")["default"];
+    AppButton: typeof import("./src/components/AppButton/index.vue")["default"];
     AppDrawer: typeof import("./src/components/AppDrawer.vue")["default"];
     AppImage: typeof import("./src/components/AppImage.vue")["default"];
     AppImageDropzone: typeof import("./src/components/AppImageDropzone.vue")["default"];
@@ -20,6 +20,7 @@ declare module "@vue/runtime-core" {
     RouterView: typeof import("vue-router")["RouterView"];
     TaskCard: typeof import("./src/components/TaskCard.vue")["default"];
     TaskCreator: typeof import("./src/components/TaskCreator.vue")["default"];
+    TaskLabel: typeof import("./src/components/TaskLabel/index.vue")["default"];
   }
 }
 

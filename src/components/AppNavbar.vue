@@ -12,8 +12,7 @@ const showTeams = ref(false);
   >
     <img
       src="https://vuejsforge.com/images/logo.svg"
-      width="150"
-      class="max-w-none"
+      class="max-w-none w-150px"
       alt="Vue.js Forge"
     />
     <div>

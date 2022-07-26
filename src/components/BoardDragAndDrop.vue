@@ -51,7 +51,7 @@ watch(columns, () =>
 </script>
 
 <template>
-  <div class="flex items-start py-12">
+  <div class="flex items-start py-12 max-w-full overflow-x-auto">
     <draggable
       :list="columns"
       group="columns"
@@ -103,6 +103,11 @@ watch(columns, () =>
       </template>
     </draggable>
 
-    <button class="text-gray-500" @click="addColumn">New Column +</button>
+    <button
+      class="text-gray-500 whitespace-nowrap pr-10 block"
+      @click="addColumn"
+    >
+      New Column +
+    </button>
   </div>
 </template>
