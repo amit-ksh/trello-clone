@@ -39,6 +39,7 @@ const updatingTitle = ref(false);
 
 const { mutate: updateBoard, onDone: onBoardUpdate } =
   useMutation(updateBoardMutation);
+
 onBoardUpdate(() => {
   updatingTitle.value && alerts.success("Board successfully updated!");
 });
@@ -46,9 +47,7 @@ onBoardUpdate(() => {
 // change the title of the board
 const updateBoardTitle = async (title: string) => {
   if (board.value.title === title) return;
-  updatingTitle.value = true;
-  await updateBoard({ id: boardId.value, title });
-  updatingTitle.value = false;
+  updateBoard({ id: boardId.value, title });
 };
 
 // handle board delete
