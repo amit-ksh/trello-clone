@@ -15,27 +15,25 @@ const { result, loading, onError } = useQuery(boardsQuery, null, {
 const boards = computed(() => result.value?.boardsList?.items || []);
 
 onError(() => alerts.error("Error loading boards"));
-const { mutate: createBoard, onDone: onBoardCreated } = useMutation(
-  createBoardMutation,
-  () => ({
-    update(cache, { data: { boardCreate } }) {
-      cache.updateQuery({ query: boardsQuery }, (res) => ({
-        boardsList: {
-          items: [...res.boardsList.items, boardCreate],
-        },
-      }));
-    },
-  })
-);
-
-onBoardCreated(() => {
-  alerts.success("Board created!");
-});
-const newBoardPayload = {
-  data: {
-    title: "New Board",
+const { mutate: createBoard } = useMutation(createBoardMutation, () => ({
+  update(cache, { data: { boardCreate } }) {
+    cache.updateQuery({ query: boardsQuery }, (res) => ({
+      boardsList: {
+        items: [...res.boardsList.items, boardCreate],
+      },
+    }));
   },
-};
+}));
+
+async function handleBoardCreate() {
+  const newBoardPayload = {
+    data: {
+      title: "New Board",
+    },
+  };
+  await createBoard(newBoardPayload);
+  alerts.success("New Board created!");
+}
 
 const getCoolGradient = (index: number) => {
   let finalGradientString = "";
@@ -70,7 +68,7 @@ const getCoolGradient = (index: number) => {
         class="transition duration-100 ease-in border rounded-md hover:-rotate-3"
       />
     </div>
-    <button class="text-gray-500" @click="createBoard(newBoardPayload)">
+    <button class="text-gray-500" @click="handleBoardCreate">
       <span>New Board +</span>
     </button>
   </div>

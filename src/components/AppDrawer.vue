@@ -39,9 +39,10 @@ const items = computed(() => [
     },
   },
 ]);
+
 const onSelect = ({ itemIndex }: { itemIndex: number }) => {
-  if (itemIndex !== 3) selectedId.value = itemIndex;
   const item = items.value[itemIndex];
+  if (!item) return;
   if (item.data.path) router.push(item.data.path);
   if (typeof item.data.action === "function") item.data.action();
 };

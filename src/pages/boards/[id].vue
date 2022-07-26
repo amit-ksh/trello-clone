@@ -31,6 +31,7 @@ const {
   { fetchPolicy: "cache-and-network" }
 );
 onBoardError(() => alerts.error("Error loading board!"));
+
 const board = computed(() => boardData.value?.board || null);
 const tasks = computed(() => board.value?.tasks?.items);
 
@@ -65,7 +66,9 @@ const { mutate: deleteBoard, onError: onErrorDeletingBoard } = useMutation(
     },
   }
 );
+
 onErrorDeletingBoard(() => alerts.error("Error deleting board"));
+
 async function deleteBoardIfConfirmed() {
   const yes = confirm("Are you sure you want to delete this board?");
   if (yes) {
@@ -81,11 +84,13 @@ const {
   onError: onErrorCreatingTask,
   onDone: onDoneCreatingTask,
 } = useMutation(addTaskToBoardMutation);
+
 onErrorCreatingTask((error) => {
   taskReject(error);
   console.error(error);
   alerts.error("Error creating task");
 });
+
 onDoneCreatingTask((res) => {
   taskResolve(res.data.boardUpdate.tasks.items[0]);
   alerts.success("New task created!");
