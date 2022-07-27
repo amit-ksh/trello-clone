@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 type ID = string;
 
 export interface Resource8base {
@@ -85,4 +87,15 @@ export interface File extends Resource8base {
   shareUrl: string;
   uploadUrl: string;
   uploaded: boolean;
+}
+
+interface ImportMetaEnv {
+  readonly VITE_TWICPICS_URL: string;
+  readonly VITE_READ_API_TOKEN: string;
+  readonly VITE_KENDO_UI_LICENSE: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
 }

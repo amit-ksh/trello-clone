@@ -20,7 +20,7 @@ const dropzoneRef = ref<HTMLElement | null>(null);
 const { base64: rawImage } = useBase64(image);
 const uploadingToFileStack = ref(false);
 const src = computed(() =>
-  typeof image.value === "string" ? image.value : rawImage
+  typeof image.value === "string" ? image.value : rawImage.value
 );
 
 function onFileSelect(e: Event) {
@@ -63,7 +63,7 @@ const { isOverDropZone } = useDropZone(dropzoneRef, onDrop);
       />
     </label>
 
-    <AppImage v-if="image" :src="src" />
+    <AppImage v-if="image" :src="src" class="aspect-video w-full" />
     <template v-else>
       {{ "Click or drop to upload image" }}
     </template>

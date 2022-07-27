@@ -1,9 +1,11 @@
 import "./common";
+import "@twicpics/components/style.css";
 
 import { createApp, h, provide } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
+import TwicPics from "@twicpics/components/vue3";
 import { DefaultApolloClient } from "@vue/apollo-composable";
 import { apolloClient } from "./graphql/apolloClient";
 
@@ -13,6 +15,11 @@ const app = createApp({
   },
   render: () => h(App),
 });
-app.use(router).use(createPinia());
+app
+  .use(router)
+  .use(createPinia())
+  .use(TwicPics, {
+    domain: `${import.meta.env.VITE_TWICPICS_URL}`,
+  });
 
 app.mount("#app");
