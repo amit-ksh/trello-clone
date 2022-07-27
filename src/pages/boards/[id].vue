@@ -113,7 +113,7 @@ async function addTask(task: Task): Promise<Task> {
 <template>
   <div v-if="board">
     <div class="flex justify-between">
-      <AppPageHeading>
+      <AppPageHeading class="mt-2">
         <input
           @keydown.enter="($event.target as HTMLInputElement).blur()"
           @blur="updateBoardTitle(($event.target as HTMLInputElement).value)"
@@ -122,7 +122,11 @@ async function addTask(task: Task): Promise<Task> {
         />
       </AppPageHeading>
 
-      <BoardMenu :board="board" @deleteBoard="deleteBoardIfConfirmed" />
+      <BoardMenu
+        class="mt-2"
+        :board="board"
+        @deleteBoard="deleteBoardIfConfirmed"
+      />
     </div>
 
     <BoardDragAndDrop

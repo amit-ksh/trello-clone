@@ -1,14 +1,18 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import { Popup as KPopup } from "@progress/kendo-vue-popup";
 import { Button as KButton } from "@progress/kendo-vue-buttons";
-import { ref } from "vue";
-import type { Board } from "@/types";
+import { reactive, ref } from "vue";
+import type { Board, Label } from "@/types";
 import { onClickOutside } from "@vueuse/core";
 import { useMutation } from "@vue/apollo-composable";
 import { useAlerts } from "@/stores/alerts";
 
 import attachImageToBoardMutation from "@/graphql/mutations/attachImageToBoard.mutation.gql";
 import AppImageDropzone from "./AppImageDropzone.vue";
+import AppLabelPicker from "./AppLabelPicker.vue";
+
+type L = Partial<Label>;
 
 defineProps<{
   board: Board;
@@ -41,6 +45,18 @@ onErrorAttachingImage(() => alerts.error("Error setting board image"));
 
 onImageAttached((res) => {
   emits("imageUpload", res.data.boardUpdate.image);
+});
+
+const fakeLabelData = reactive<{
+  existingLabels: L[] | any;
+  selectedLabels: L[] | any;
+}>({
+  existingLabels: [
+    { label: "High Priority", color: "red", id: "1" },
+    { label: "Medium Priority", color: "orange", id: "2" },
+    { label: "Meh", color: "yellow", id: "3" },
+  ],
+  selectedLabels: [{ label: "High Priority", color: "red", id: "1" }],
 });
 </script>
 <template>
@@ -87,11 +103,21 @@ onImageAttached((res) => {
               "
             />
           </li>
+
+          <li>
+            <AppLabelPicker
+              :labels="fakeLabelData.existingLabels"
+              :selected="fakeLabelData.selectedLabels"
+              @labelsUpdate="fakeLabelData.existingLabels = $event"
+              @selectionUpdate="fakeLabelData.selectedLabels = $event"
+            />
+          </li>
         </ul>
       </div>
     </KPopup>
   </div>
 </template>
+
 <style scoped>
 ul li {
   @apply p-2;
