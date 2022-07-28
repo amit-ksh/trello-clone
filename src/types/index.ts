@@ -9,9 +9,16 @@ export interface Resource8base {
   deletedAt: Date;
 }
 
+export interface Team extends Resource8base {
+  name: string;
+}
+
 export interface User extends Resource8base {
   email: string;
   roles: { items: Role[] };
+  team: {
+    items: Team[];
+  };
 }
 export interface Role {
   name: string;
@@ -93,6 +100,10 @@ interface ImportMetaEnv {
   readonly VITE_TWICPICS_URL: string;
   readonly VITE_READ_API_TOKEN: string;
   readonly VITE_KENDO_UI_LICENSE: string;
+  readonly VITE_AUTH_CLIENT_ID: string;
+  readonly VITE_AUTH_PROFILE_ID: string;
+  readonly HTTP_8BASE_API_LINK: string;
+  readonly VITE_AUTH_DOMAIN: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

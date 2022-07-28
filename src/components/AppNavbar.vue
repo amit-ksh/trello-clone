@@ -2,6 +2,7 @@
 import { Button as KButton } from "@progress/kendo-vue-buttons";
 import { Popup as KPopup } from "@progress/kendo-vue-popup";
 import { ref } from "vue";
+
 const showTeams = ref(false);
 </script>
 
@@ -37,6 +38,7 @@ const showTeams = ref(false);
         :shape="'rectangle'"
         :icon="'logout'"
         :theme-color="'warning'"
+        @click="$router.push('/logout')"
         >Logout</KButton
       >
     </div>
