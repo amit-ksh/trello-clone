@@ -135,7 +135,8 @@ async function addTask(task: Task): Promise<Task> {
       :add-task="addTask"
       @update="updateBoard"
     />
-  </div>
 
-  <AppLoader v-if="loadingBoard" :overlay="true" />
+    <AppLoader v-if="loadingBoard" :overlay="true" />
+    <RouterView />
+  </div>
 </template>
